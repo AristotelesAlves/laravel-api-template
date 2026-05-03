@@ -1,0 +1,19 @@
+meta {
+  name: Protected Test
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}/api/protected-test
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+headers {
+  Accept: application/json
+}
