@@ -109,7 +109,7 @@ cache-clear:
 	$(DOCKER_COMPOSE) exec $(APP) php artisan optimize:clear
 
 cache-reset:
-	$(DOCKER_COMPOSE) exec -u root $(APP) rm -f /var/www/html/bootstrap/cache/packages.php /var/www/html/bootstrap/cache/services.php
+	$(DOCKER_COMPOSE) exec -u root $(APP) rm -f /var/www/html/bootstrap/cache/config.php /var/www/html/bootstrap/cache/packages.php /var/www/html/bootstrap/cache/services.php
 	$(DOCKER_COMPOSE) exec $(APP) composer dump-autoload
 
 optimize-clear: cache-clear
