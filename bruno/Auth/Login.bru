@@ -24,7 +24,7 @@ body:json {
 }
 
 script:post-response {
-  if (res.body && res.body.data && res.body.data.token) {
+  if (res.body?.data?.token) {
     bru.setEnvVar("token", res.body.data.token);
   }
 }
