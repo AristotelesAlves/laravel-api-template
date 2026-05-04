@@ -8,6 +8,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
+    /**
+     * Summary of toArray
+     * @param Request $request
+     * @return array{email: string, id: string, name: string}
+     */
     public function toArray(Request $request): array
     {
         /** @var AuthenticatedUserDTO $user */

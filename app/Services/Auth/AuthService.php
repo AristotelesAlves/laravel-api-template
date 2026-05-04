@@ -12,14 +12,22 @@ use Illuminate\Validation\ValidationException;
 
 class AuthService
 {
-    public function __construct(private readonly UserRepository $users)
-    {}
+    /**
+     * Summary of __construct
+     * @param UserRepository $users
+     */
+    public function __construct(private readonly UserRepository $users) {}
 
+    /**
+     * Summary of login
+     * @param LoginInputDTO $input
+     * @return LoginOutputDTO
+     */
     public function login(LoginInputDTO $input): LoginOutputDTO
     {
         $user = $this->users->findByEmail($input->email);
 
-        if ($user === null || !Hash::check($input->password, (string) $user->password)) {
+        if ($user === null || ! Hash::check($input->password, (string) $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
@@ -32,6 +40,11 @@ class AuthService
         );
     }
 
+    /**
+     * Summary of logout
+     * @param mixed $currentToken
+     * @return void
+     */
     public function logout(?object $currentToken): void
     {
         if ($currentToken !== null && method_exists($currentToken, 'delete')) {
@@ -39,6 +52,11 @@ class AuthService
         }
     }
 
+    /**
+     * Summary of authenticatedUser
+     * @param User $user
+     * @return AuthenticatedUserDTO
+     */
     public function authenticatedUser(User $user): AuthenticatedUserDTO
     {
         return AuthenticatedUserDTO::fromModel($user);

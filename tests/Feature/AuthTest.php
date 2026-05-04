@@ -12,6 +12,10 @@ class AuthTest extends TestCase
 {
     use RefreshDatabase;
 
+    /**
+     * Summary of test_user_can_login_with_valid_credentials
+     * @return void
+     */
     public function test_user_can_login_with_valid_credentials(): void
     {
         $user = User::query()->create([
@@ -43,6 +47,10 @@ class AuthTest extends TestCase
             ]);
     }
 
+    /**
+     * Summary of test_user_cannot_login_with_invalid_credentials
+     * @return void
+     */
     public function test_user_cannot_login_with_invalid_credentials(): void
     {
         User::query()->create([
@@ -57,11 +65,19 @@ class AuthTest extends TestCase
         ])->assertUnprocessable();
     }
 
+    /**
+     * Summary of test_me_requires_authentication
+     * @return void
+     */
     public function test_me_requires_authentication(): void
     {
         $this->getJson('/api/me')->assertUnauthorized();
     }
 
+    /**
+     * Summary of test_authenticated_user_can_read_me
+     * @return void
+     */
     public function test_authenticated_user_can_read_me(): void
     {
         $user = User::query()->create([

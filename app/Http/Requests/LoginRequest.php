@@ -7,11 +7,19 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class LoginRequest extends FormRequest
 {
+    /**
+     * Summary of authorize
+     * @return bool
+     */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * Summary of rules
+     * @return array{device_name: string[], email: string[], password: string[]}
+     */
     public function rules(): array
     {
         return [
@@ -21,6 +29,10 @@ class LoginRequest extends FormRequest
         ];
     }
 
+    /**
+     * Summary of toDTO
+     * @return LoginInputDTO
+     */
     public function toDTO(): LoginInputDTO
     {
         return new LoginInputDTO(
