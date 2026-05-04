@@ -93,4 +93,42 @@ class AuthTest extends TestCase
             ->assertJsonPath('data.id', $user->id)
             ->assertJsonPath('data.email', 'admin@example.com');
     }
+
+    /**
+     * Summary of test_authenticated_user_can_logout
+     * @return void
+     */
+    public function test_authenticated_user_can_logout(): void
+    {
+        $user = User::query()->create([
+            'name' => 'Template Admin',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $this->postJson('/api/logout')
+            ->assertOk()
+            ->assertJsonPath('message', 'Logged out successfully.');
+    }
+
+    /**
+     * Summary of test_authenticated_user_can_access_protected_test_route
+     * @return void
+     */
+    public function test_authenticated_user_can_access_protected_test_route(): void
+    {
+        $user = User::query()->create([
+            'name' => 'Template Admin',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $this->getJson('/api/protected-test')
+            ->assertOk()
+            ->assertJsonPath('message', 'Authenticated request successful.');
+    }
 }
