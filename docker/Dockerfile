@@ -16,8 +16,8 @@ RUN apt-get update \
         pcntl \
         pdo_pgsql \
         zip \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
+    && pecl install redis xdebug \
+    && docker-php-ext-enable redis xdebug \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

@@ -4,7 +4,7 @@ DOCKER_COMPOSE := docker compose
 APP := app
 VENDOR ?= app
 
-.PHONY: help rename up down restart build shell logs install setup key migrate seed fresh test test-filter pint pint-fix lint artisan composer routes tinker queue cache-clear cache-reset optimize-clear fix-permissions perms status
+.PHONY: help rename up down restart build shell logs install setup key migrate seed fresh teste test test-filter xbug coverage phpstan pint pint-fix style lint ci-local artisan composer routes tinker queue cache-clear cache-reset optimize-clear fix-permissions perms status
 
 help:
 	@echo "Available commands:"
@@ -21,11 +21,17 @@ help:
 	@echo "  make migrate          Run migrations"
 	@echo "  make seed             Run seeders"
 	@echo "  make fresh            Recreate database and run seeders"
+	@echo "  make teste            Run tests with Artisan"
 	@echo "  make test             Run tests"
 	@echo "  make test-filter      Run tests by filter: make test-filter FILTER=AuthTest"
+	@echo "  make xbug             Run Artisan tests with Xdebug coverage and require at least 80%"
+	@echo "  make coverage         Run tests with coverage and require at least 80%"
+	@echo "  make phpstan          Run PHPStan static analysis"
 	@echo "  make pint             Check code style with Laravel Pint"
 	@echo "  make pint-fix         Fix code style with Laravel Pint"
+	@echo "  make style            Alias for make pint"
 	@echo "  make lint             Alias for make pint"
+	@echo "  make ci-local         Run tests, coverage, and code style checks"
 	@echo "  make artisan CMD=...  Run an Artisan command in the app container"
 	@echo "  make composer CMD=... Run a Composer command in the app container"
 	@echo "  make routes           List application routes"
@@ -79,8 +85,18 @@ fresh:
 test:
 	$(DOCKER_COMPOSE) exec $(APP) php artisan test
 
+teste: test
+
 test-filter:
 	$(DOCKER_COMPOSE) exec $(APP) php artisan test --filter=$(FILTER)
+
+coverage:
+	$(DOCKER_COMPOSE) exec -e XDEBUG_MODE=coverage $(APP) php artisan test --coverage --min=80 --coverage-clover=coverage.xml
+
+xbug: coverage
+
+phpstan:
+	$(DOCKER_COMPOSE) exec $(APP) ./vendor/bin/phpstan analyse
 
 pint:
 	$(DOCKER_COMPOSE) exec $(APP) ./vendor/bin/pint --test
@@ -88,7 +104,11 @@ pint:
 pint-fix:
 	$(DOCKER_COMPOSE) exec $(APP) ./vendor/bin/pint
 
+style: pint
+
 lint: pint
+
+ci-local: test coverage style
 
 artisan:
 	$(DOCKER_COMPOSE) exec $(APP) php artisan $(CMD)

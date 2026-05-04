@@ -11,3 +11,5 @@
 !/storage/framework/views/.gitkeep
 /storage/logs/*
 !/storage/logs/.gitkeep
+.phpunit.result.cache
+coverage.xml

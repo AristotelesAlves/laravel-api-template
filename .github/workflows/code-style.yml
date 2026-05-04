@@ -1,4 +1,4 @@
-name: CI
+name: Code Style
 
 on:
   push:
@@ -8,8 +8,8 @@ on:
   pull_request:
 
 jobs:
-  tests:
-    name: Tests, coverage and code style
+  pint:
+    name: Laravel Pint
     runs-on: ubuntu-latest
 
     steps:
@@ -21,24 +21,10 @@ jobs:
         with:
           php-version: '8.3'
           extensions: bcmath, intl, pcntl, pdo_sqlite, zip
-          coverage: pcov
+          coverage: none
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
-
-      - name: Prepare environment
-        run: |
-          cp .env.example .env
-          php artisan key:generate
-
-      - name: Run tests with coverage
-        run: php artisan test --coverage --min=80 --coverage-clover=coverage.xml
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-clover
-          path: coverage.xml
 
       - name: Check code style
         run: ./vendor/bin/pint --test
