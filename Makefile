@@ -4,7 +4,7 @@ DOCKER_COMPOSE := docker compose
 APP := app
 VENDOR ?= app
 
-.PHONY: help rename up down restart build shell logs install setup key migrate seed fresh teste test test-filter xbug coverage phpstan pint pint-fix style lint ci-local artisan composer routes tinker queue cache-clear cache-reset optimize-clear fix-permissions perms status
+.PHONY: help rename up down restart build shell logs install setup key migrate seed fresh teste test test-filter xbug coverage phpstan ci-local artisan composer routes tinker queue cache-clear cache-reset optimize-clear fix-permissions perms status
 
 help:
 	@echo "Available commands:"
@@ -27,11 +27,7 @@ help:
 	@echo "  make xbug             Run Artisan tests with Xdebug coverage and require at least 80%"
 	@echo "  make coverage         Run tests with coverage and require at least 80%"
 	@echo "  make phpstan          Run PHPStan static analysis"
-	@echo "  make pint             Check code style with Laravel Pint"
-	@echo "  make pint-fix         Fix code style with Laravel Pint"
-	@echo "  make style            Alias for make pint"
-	@echo "  make lint             Alias for make pint"
-	@echo "  make ci-local         Run tests, coverage, and code style checks"
+	@echo "  make ci-local         Run tests, coverage, and PHPStan"
 	@echo "  make artisan CMD=...  Run an Artisan command in the app container"
 	@echo "  make composer CMD=... Run a Composer command in the app container"
 	@echo "  make routes           List application routes"
@@ -98,17 +94,7 @@ xbug: coverage
 phpstan:
 	$(DOCKER_COMPOSE) exec $(APP) ./vendor/bin/phpstan analyse
 
-pint:
-	$(DOCKER_COMPOSE) exec $(APP) ./vendor/bin/pint --test
-
-pint-fix:
-	$(DOCKER_COMPOSE) exec $(APP) ./vendor/bin/pint
-
-style: pint
-
-lint: pint
-
-ci-local: test coverage style
+ci-local: test coverage phpstan
 
 artisan:
 	$(DOCKER_COMPOSE) exec $(APP) php artisan $(CMD)
