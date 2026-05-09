@@ -15,4 +15,14 @@ class UserRepository
     {
         return User::query()->where('email', $email)->first();
     }
+
+    /**
+     * Summary of create
+     * @param array $data
+     * @return User
+     */
+    public function create(array $data): User
+    {
+        return User::query()->create($data);
+    }
 }

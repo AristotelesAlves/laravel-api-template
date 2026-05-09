@@ -5,6 +5,7 @@ namespace App\Services\Auth;
 use App\DTO\Auth\AuthenticatedUserDTO;
 use App\DTO\Auth\LoginInputDTO;
 use App\DTO\Auth\LoginOutputDTO;
+use App\DTO\Auth\RegisterInputDTO;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
@@ -27,7 +28,7 @@ class AuthService
     {
         $user = $this->users->findByEmail($input->email);
 
-        if ($user === null || ! Hash::check($input->password, (string) $user->password)) {
+        if (!Hash::check($input->password, (string) $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
@@ -38,6 +39,15 @@ class AuthService
             tokenType: 'Bearer',
             user: AuthenticatedUserDTO::fromModel($user),
         );
+    }
+
+    function register(RegisterInputDTO $input): void
+    {
+        $this->users->create([
+            'name' => $input->name,
+            'email' => $input->email,
+            'password' => Hash::make($input->password),
+        ]);
     }
 
     /**

@@ -12,6 +12,23 @@ class AuthTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_user_can_register(): void
+    {
+        $this->postJson('/api/register', [
+            'name' => 'Template Admin',
+            'email' => 'admin@example.com',
+            'password' => 'password',
+            'confirmPassword' => 'password',
+        ])
+            ->assertCreated()
+            ->assertJsonPath('message', 'Registration successful. Please log in.');
+
+        $this->assertDatabaseHas('users', [
+            'name' => 'Template Admin',
+            'email' => 'admin@example.com',
+        ]);
+    }
+
     /**
      * Summary of test_user_can_login_with_valid_credentials
      * @return void

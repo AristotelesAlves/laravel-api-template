@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\LoginResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\Auth\AuthService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -23,6 +25,22 @@ class AuthController extends Controller
     public function login(LoginRequest $request, AuthService $auth): LoginResource
     {
         return new LoginResource($auth->login($request->toDTO()));
+    }
+
+    public function register(RegisterRequest $body, AuthService $auth): JsonResponse
+    {
+        try {
+            $auth->register($body->toDTO());
+
+            return new JsonResponse([
+                'message' => 'User registered successfully.',
+            ], 201);
+        } catch (Exception $e) {
+            return new JsonResponse([
+                'message' => 'Registration failed.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
